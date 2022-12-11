@@ -1,11 +1,13 @@
-FROM tensorflow/tensorflow:1.15.0-py3
+# FROM tensorflow/tensorflow:1.15.0-py3
+FROM tensorflow/tensorflow:1.15.0-gpu-py3
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV DEBCONF_NONINTERACTIVE_SEEN true
 ENV LANG=C.UTF-8
 RUN mkdir /gpt-2
 
-RUN apt update
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A4B469963BF863CC
+RUN apt update --allow-insecure-repositories --allow-unauthenticated
 RUN apt install git -y
 RUN git clone --depth 1 https://github.com/openai/gpt-2.git /gpt-2
 
@@ -13,7 +15,7 @@ WORKDIR /gpt-2
 RUN pip3 install -r requirements.txt
 
 #Uncomment the model to download. Should match the model_to_use setting in gpt2-api.py
-# RUN python3 download_model.py 124M
+RUN python3 download_model.py 124M
 # RUN python3 download_model.py 355M
 # RUN python3 download_model.py 774M
 RUN python3 download_model.py 1558M
